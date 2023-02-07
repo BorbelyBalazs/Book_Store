@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Author {
@@ -55,5 +56,13 @@ public class Author {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        return "author_id=" + author_id +
+                ", name='" + name + '\'' +
+                ", dob=" + dob +
+                ", books=" + books + "\n";
     }
 }

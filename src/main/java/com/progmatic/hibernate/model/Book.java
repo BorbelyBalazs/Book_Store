@@ -3,7 +3,10 @@ package com.progmatic.hibernate.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.Year;
+import java.util.List;
 import java.util.Set;
+
 
 @Entity
 public class Book {
@@ -13,20 +16,22 @@ public class Book {
     private long book_id;
     private String isbn;
     private String title;
-    private LocalDate dop;
+    private Year year;
     private boolean isAvailable;
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
 
-    @ManyToMany(mappedBy = "books")
-    private Set<Store> stores;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookConnStore> bcs;
 
 
-    public Book(String isbn, String title, LocalDate dop, boolean isAvailable) {
+    public Book(String isbn, String title, Year year, Author author, boolean isAvailable) {
         this.isbn = isbn;
         this.title = title;
-        this.dop = dop;
+        this.year = year;
+        this.author = author;
         this.isAvailable = isAvailable;
     }
 
@@ -58,12 +63,12 @@ public class Book {
         this.title = title;
     }
 
-    public LocalDate getDop() {
-        return dop;
+    public Year getYear() {
+        return year;
     }
 
-    public void setDop(LocalDate dop) {
-        this.dop = dop;
+    public void setYear(Year year) {
+        this.year = year;
     }
 
     public Author getAuthor() {
@@ -82,12 +87,19 @@ public class Book {
         isAvailable = available;
     }
 
-    public Set<Store> getStores() {
-        return stores;
+    public List<BookConnStore> getBcs() {
+        return bcs;
     }
 
-    public void setStores(Set<Store> stores) {
-        this.stores = stores;
+    public void setBcs(List<BookConnStore> bcs) {
+        this.bcs = bcs;
+    }
+
+    @Override
+    public String toString() {
+        return "\nCím: " + title +
+                ", Megjelenés éve: " + year +
+                ", Szerző: " + author.getName();
     }
 }
 

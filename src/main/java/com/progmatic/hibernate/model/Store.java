@@ -2,7 +2,9 @@ package com.progmatic.hibernate.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
+
 
 @Entity
 public class Store {
@@ -11,17 +13,24 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long store_id;
 
+    private String name;
+    private String address;
+
     private boolean isActive;
 
-    @ManyToMany
-    @JoinTable(
-            name = "BookConnStore",
-            joinColumns = @JoinColumn(name = "store_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private Set<Book> books;
-    private int quantity;
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookConnStore> bcs;
+
+    public Store(String name, String address, boolean isActive) {
+        this.name = name;
+        this.address = address;
+        this.isActive = isActive;
+    }
+
+    public Store() {
+
+    }
 
     public long getStore_id() {
         return store_id;
@@ -31,21 +40,6 @@ public class Store {
         this.store_id = store_id;
     }
 
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public boolean isActive() {
         return isActive;
@@ -53,5 +47,38 @@ public class Store {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<BookConnStore> getBcs() {
+        return bcs;
+    }
+
+    public void setBcs(List<BookConnStore> bcs) {
+        this.bcs = bcs;
+    }
+
+    @Override
+    public String toString() {
+        return "store_id=" + store_id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", isActive=" + isActive +
+                ", bcs=" + bcs + "\n";
     }
 }
